@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gaming News</title>
+    <link href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container py-4">
+        <h1 class="mb-4"><i class="fas fa-gamepad text-success me-2"></i>Latest Gaming News</h1>
+        {% if articles %}
+            {% for article in articles %}
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title"><a href="{{ article.url }}" class="text-decoration-none">{{ article.title }}</a></h5>
+                        <p class="card-text">{{ article.description }}</p>
+                        <p class="card-text"><small class="text-muted">{{ article.source }} - {{ article.publishedAt }}</small></p>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No articles found.</p>
+        {% endif %}
+    </div>
+</body>
+</html>
