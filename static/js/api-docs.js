@@ -26,35 +26,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 endpointSelect.innerHTML = `
                     <option value="/api/health">Health Check</option>
                     <option value="/api/info">API Info</option>
-                    <option value="/api/users">All Users</option>
-                    <option value="/api/users/1">User by ID (ID: 1)</option>
-                    <option value="/api/users/2">User by ID (ID: 2)</option>
+                    <option value="/api/gaming-news">Gaming News</option>
                 `;
                 break;
-            case 'POST':
-                endpointSelect.innerHTML = `
-                    <option value="/api/users">Create User</option>
-                `;
-                requestBodyTextarea.value = JSON.stringify({
-                    "name": "New User",
-                    "email": "newuser@example.com"
-                }, null, 2);
-                break;
-            case 'PUT':
-                endpointSelect.innerHTML = `
-                    <option value="/api/users/1">Update User (ID: 1)</option>
-                    <option value="/api/users/2">Update User (ID: 2)</option>
-                `;
-                requestBodyTextarea.value = JSON.stringify({
-                    "name": "Updated Name",
-                    "email": "updated@example.com"
-                }, null, 2);
-                break;
-            case 'DELETE':
-                endpointSelect.innerHTML = `
-                    <option value="/api/users/1">Delete User (ID: 1)</option>
-                    <option value="/api/users/2">Delete User (ID: 2)</option>
-                `;
+            default:
+                endpointSelect.innerHTML = `<option value="">No endpoints available</option>`;
+                requestBodyTextarea.value = '';
                 break;
         }
     }
