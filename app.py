@@ -1,8 +1,12 @@
 import os
 import logging
+from datetime import datetime
 from flask import Flask, jsonify, render_template
 from flask_cors import CORS
+from dotenv import load_dotenv
 import requests
+
+load_dotenv()
 
 # Configure logging
 logging.basicConfig(level=logging.DEBUG)
@@ -16,6 +20,46 @@ CORS(app)
 
 # External news API configuration
 NEWS_API_URL = "https://newsapi.org/v2/everything"
+
+
+def _fetch_gaming_news():
+    """Fetch gaming news articles from the external API"""
+    api_key = os.environ.get("NEWS_API_KEY")
+    if not api_key:
+        raise RuntimeError("NEWS_API_KEY environment variable is not set")
+
+    params = {
+        "q": "gaming",
+        "language": "en",
+        "sortBy": "publishedAt",
+        "pageSize": 10,
+        "apiKey": api_key,
+    }
+
+    response = requests.get(NEWS_API_URL, params=params, timeout=10)
+    response.raise_for_status()
+    data = response.json()
+
+    def format_date(date_str: str) -> str:
+        if not date_str:
+            return ""
+        try:
+            dt = datetime.fromisoformat(date_str.replace("Z", "+00:00"))
+            return dt.strftime("%Y-%m-%d %H:%M UTC")
+        except ValueError:
+            return date_str
+
+    articles = [
+        {
+            "title": a.get("title"),
+            "description": a.get("description"),
+            "url": a.get("url"),
+            "publishedAt": format_date(a.get("publishedAt")),
+            "source": (a.get("source") or {}).get("name"),
+        }
+        for a in data.get("articles", [])
+    ]
+    return articles
 
 
 # Error handler for 404
@@ -65,47 +109,33 @@ def health_check():
     })
 
 
-# Gaming news endpoint
 @app.route('/api/gaming-news', methods=['GET'])
-def gaming_news():
-    """Fetch the latest gaming news articles"""
-    api_key = os.environ.get("NEWS_API_KEY")
-    if not api_key:
-        return jsonify({
-            "error": "Configuration Error",
-            "message": "NEWS_API_KEY environment variable is not set",
-        }), 500
-
-    params = {
-        "q": "gaming",
-        "language": "en",
-        "sortBy": "publishedAt",
-        "pageSize": 10,
-        "apiKey": api_key,
-    }
-
+def gaming_news_api():
+    """Fetch the latest gaming news articles as JSON"""
     try:
-        response = requests.get(NEWS_API_URL, params=params, timeout=10)
-        response.raise_for_status()
-        data = response.json()
-        articles = data.get("articles", [])
-        simplified = [
-            {
-                "title": a.get("title"),
-                "description": a.get("description"),
-                "url": a.get("url"),
-                "publishedAt": a.get("publishedAt"),
-                "source": (a.get("source") or {}).get("name"),
-            }
-            for a in articles
-        ]
-        return jsonify({"status": "success", "count": len(simplified), "data": simplified})
+        articles = _fetch_gaming_news()
+        return jsonify({"status": "success", "count": len(articles), "data": articles})
+    except RuntimeError as e:
+        return jsonify({"error": "Configuration Error", "message": str(e)}), 500
     except requests.RequestException as e:
         logging.error(f"Error fetching gaming news: {str(e)}")
         return jsonify({
             "error": "Bad Gateway",
             "message": "Failed to fetch gaming news",
         }), 502
+
+
+@app.route('/gaming-news', methods=['GET'])
+def gaming_news_page():
+    """Render the latest gaming news articles"""
+    try:
+        articles = _fetch_gaming_news()
+        return render_template('gaming_news.html', articles=articles)
+    except RuntimeError as e:
+        return render_template('error.html', message=str(e)), 500
+    except requests.RequestException as e:
+        logging.error(f"Error fetching gaming news: {str(e)}")
+        return render_template('error.html', message="Failed to fetch gaming news"), 502
 
 
 # Get API information
