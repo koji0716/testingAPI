@@ -54,6 +54,7 @@ def _fetch_gaming_news():
             "title": a.get("title"),
             "description": a.get("description"),
             "url": a.get("url"),
+            "image": a.get("urlToImage"),
             "publishedAt": format_date(a.get("publishedAt")),
             "source": (a.get("source") or {}).get("name"),
         }
