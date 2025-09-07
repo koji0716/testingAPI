@@ -31,3 +31,18 @@ The server will start on `http://localhost:5000`.
 ## Environment
 
 This application uses `python-dotenv` to load environment variables, making it easy to run in environments like Termux. Ensure the `.env` file or the `NEWS_API_KEY` environment variable is set before starting the server.
+
+## Deploy to Vercel
+
+This repository is configured for deployment on [Vercel](https://vercel.com/):
+
+1. Set `NEWS_API_KEY` in your Vercel project environment variables.
+2. Install the Vercel CLI and log in:
+   ```bash
+   npm i -g vercel
+   vercel login
+   ```
+3. Deploy the application:
+   ```bash
+   vercel --prod
+   ```
