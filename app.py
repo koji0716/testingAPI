@@ -6,6 +6,9 @@ from flask_cors import CORS
 from dotenv import load_dotenv
 import requests
 
+# Load environment variables from a .env file if present
+load_dotenv()
+
 # Configure logging
 logging.basicConfig(level=logging.DEBUG)
 
@@ -160,6 +163,13 @@ def api_info():
             "info": "/api/info",
         },
     })
+
+
+@app.route('/api/debug-env', methods=['GET'])
+def debug_env():
+    """Expose selected environment variables for debugging"""
+    codez = os.environ.get("CODEZ")
+    return jsonify({"CODEZ": codez})
 
 
 if __name__ == '__main__':
