@@ -27,6 +27,7 @@ The server will start on `http://localhost:5000`.
 - **JSON API:** `GET /api/gaming-news` returns the latest articles as JSON.
 - **HTML page:** Visit `http://localhost:5000/gaming-news` to view articles formatted for the browser.
 - **Health check:** `GET /api/health` confirms the API status.
+- **Debug environment:** `GET /api/debug-env` shows the value of the `CODEZ` environment variable.
 
 ## Environment
 
