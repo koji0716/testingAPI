@@ -162,6 +162,13 @@ def api_info():
     })
 
 
+@app.route('/api/debug-env', methods=['GET'])
+def debug_env():
+    """Expose selected environment variables for debugging"""
+    codez = os.environ.get("CODEZ")
+    return jsonify({"CODEZ": codez})
+
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
 
