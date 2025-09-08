@@ -4,8 +4,5 @@
   ],
   "routes": [
     { "src": "/(.*)", "dest": "main.py" }
-  ],
-  "env": {
-    "NEWS_API_KEY": "@news-api-key"
-  }
+  ]
 }
