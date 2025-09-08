@@ -6,6 +6,9 @@ from flask_cors import CORS
 from dotenv import load_dotenv
 import requests
 
+# Load environment variables from a .env file if present
+load_dotenv()
+
 # Configure logging
 logging.basicConfig(level=logging.DEBUG)
 
