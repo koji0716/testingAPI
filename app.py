@@ -24,7 +24,7 @@ NEWS_API_URL = "https://newsapi.org/v2/everything"
 
 def _get_news_api_key() -> str:
     """Retrieve the News API key from environment variables"""
-    api_key = os.environ.get("NEWS_API_KEY") or os.environ.get("VERCEL_NEWS_API_KEY")
+    api_key = os.environ.get("NEWS_API_KEY")
     if not api_key:
         raise RuntimeError("NEWS_API_KEY environment variable is not set")
     return api_key
