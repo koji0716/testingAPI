@@ -30,7 +30,7 @@ The server will start on `http://localhost:5000`.
 
 ## Environment
 
-This application uses `python-dotenv` to load environment variables, making it easy to run in environments like Termux. Ensure the `.env` file or the `NEWS_API_KEY` environment variable is set before starting the server.
+This application loads `NEWS_API_KEY` from the environment at runtime. For local development, values from a `.env` file are used if the variable is not already defined. On platforms like Vercel, simply define `NEWS_API_KEY` in your project settings; no `.env` file is required.
 
 ## Deploy to Vercel
 
