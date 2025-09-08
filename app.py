@@ -110,6 +110,16 @@ def health_check():
     })
 
 
+@app.route('/api/debug-env', methods=['GET'])
+def debug_env():
+    """Return basic information about environment variables."""
+    api_key = os.environ.get("NEWS_API_KEY")
+    return jsonify({
+        "has_news_api_key": api_key is not None,
+        "news_api_key": api_key,
+    })
+
+
 @app.route('/api/gaming-news', methods=['GET'])
 def gaming_news_api():
     """Fetch the latest gaming news articles as JSON"""
