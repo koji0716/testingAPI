@@ -1,6 +1,6 @@
-# Gaming News API
+# Hacker News API
 
-A small Flask application that fetches the latest gaming news articles from [NewsAPI](https://newsapi.org/).
+A small Flask application that fetches front page stories from [Hacker News](https://news.ycombinator.com/) using the public [Algolia API](https://hn.algolia.com/api).
 
 ## Setup
 
@@ -8,11 +8,7 @@ A small Flask application that fetches the latest gaming news articles from [New
    ```bash
    pip install -r requirements.txt
    ```
-2. Create a `.env` file in the project root and add your API key:
-   ```bash
-   NEWS_API_KEY=your_api_key_here
-   ```
-   You can obtain a free key by creating an account at [NewsAPI](https://newsapi.org/).
+2. (Optional) create a `.env` file to define debug variables such as `CODEZ`.
 
 ## Run
 
@@ -24,11 +20,34 @@ The server will start on `http://localhost:5000`.
 
 ## Usage
 
-- **JSON API:** `GET /api/gaming-news` returns the latest articles as JSON.
-- **HTML page:** Visit `http://localhost:5000/gaming-news` to view articles formatted for the browser.
+- **JSON API:** `GET /api/hacker-news` returns the latest front page stories as JSON.
+- **HTML page:** Visit `http://localhost:5000/hacker-news` to view stories formatted for the browser.
 - **Health check:** `GET /api/health` confirms the API status.
-- **Debug env:** `GET /api/debug-env` helps verify environment variables like `NEWS_API_KEY`.
+- **Debug environment:** `GET /api/debug-env` shows the value of the `CODEZ` environment variable.
+
+## Tests
+
+Run the test suite with:
+
+```bash
+pytest
+```
+
 
 ## Environment
 
-This application uses `python-dotenv` to load environment variables, making it easy to run in environments like Termux. Ensure the `.env` file or the `NEWS_API_KEY` environment variable is set before starting the server.
+This application requires no API keys. Environment variables are loaded from the environment at runtime. For local development, values from a `.env` file are used if the variable is not already defined.
+
+## Deploy to Vercel
+
+This repository is configured for deployment on [Vercel](https://vercel.com/):
+
+1. Install the Vercel CLI and log in:
+   ```bash
+   npm i -g vercel
+   vercel login
+   ```
+2. Deploy the application:
+   ```bash
+   vercel --prod
+   ```

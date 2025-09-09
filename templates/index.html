@@ -19,17 +19,23 @@
                             Flask REST API
                         </h1>
                         <p class="lead">Simple and clean REST API with comprehensive documentation</p>
-                        <div class="d-flex justify-content-center gap-3">
-                            <span class="badge bg-success fs-6">
-                                <i class="fas fa-check-circle me-1"></i>
-                                API Status: Online
-                            </span>
-                            <span class="badge bg-info fs-6">
-                                <i class="fas fa-code-branch me-1"></i>
-                                Version: 1.0.0
-                            </span>
-                        </div>
-                    </div>
+                          <div class="d-flex justify-content-center gap-3">
+                              <span class="badge bg-success fs-6">
+                                  <i class="fas fa-check-circle me-1"></i>
+                                  API Status: Online
+                              </span>
+                              <span class="badge bg-info fs-6">
+                                  <i class="fas fa-code-branch me-1"></i>
+                                  Version: 1.0.0
+                              </span>
+                          </div>
+                          <div class="mt-4">
+                              <a href="/hacker-news" class="btn btn-outline-info">
+                                  <i class="fas fa-newspaper me-2"></i>
+                                  Hacker News
+                              </a>
+                          </div>
+                      </div>
                 </div>
             </div>
         </div>
@@ -62,7 +68,7 @@
                                         <select id="endpoint" class="form-select">
                                             <option value="/api/health">Health Check</option>
                                             <option value="/api/info">API Info</option>
-                                            <option value="/api/gaming-news">Gaming News</option>
+                                            <option value="/api/hacker-news">Hacker News</option>
                                         </select>
                                     </div>
                                     <div class="mb-3" id="request-body-section" style="display: none;">
@@ -118,31 +124,31 @@
                                     <pre class="bg-dark text-light p-2 rounded"><code>{
   "status": "healthy",
   "message": "API is running successfully",
-  "timestamp": "2025-09-01T00:00:00Z"
+  "timestamp": "2024-01-01T00:00:00Z"
 }</code></pre>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Gaming News -->
+                    <!-- Hacker News -->
                     <div class="card mb-4">
                         <div class="card-header">
                             <h4 class="mb-0">
                                 <span class="badge bg-success me-2">GET</span>
-                                Gaming News
+                                Hacker News
                             </h4>
                         </div>
                         <div class="card-body">
-                            <p class="card-text">Fetch recent gaming news articles.</p>
+                            <p class="card-text">Fetch front page Hacker News stories.</p>
                             <div class="row">
                                 <div class="col-md-6">
                                     <h6>Endpoint:</h6>
-                                    <code>/api/gaming-news</code>
+                                    <code>/api/hacker-news</code>
                                 </div>
                                 <div class="col-md-6">
                                     <h6>Response Example:</h6>
-                                    <pre class="bg-dark text-light p-2 rounded"><code>{\n  \"status\": \"success\",\n  \"count\": 2,\n  \"data\": [\n    {\n      \"title\": \"...\",\n      \"description\": \"...\",\n      \"url\": \"https://example.com\",\n      \"publishedAt\": \"2025-09-01T00:00:00Z\",\n      \"source\": \"Example\"\n    }\n  ]\n}</code></pre>
+                                    <pre class="bg-dark text-light p-2 rounded"><code>{\n  \"status\": \"success\",\n  \"count\": 2,\n  \"data\": [\n    {\n      \"title\": \"Example story\",\n      \"url\": \"https://news.ycombinator.com\",\n      \"author\": \"alice\",\n      \"points\": 123,\n      \"created_at\": \"2025-09-01 00:00 UTC\"\n    }\n  ]\n}</code></pre>
                                 </div>
                             </div>
                         </div>
@@ -166,9 +172,9 @@
                                 <div class="col-md-6">
                                     <h6>Response Example:</h6>
                                     <pre class="bg-dark text-light p-2 rounded"><code>{
-  "name": "Gaming News API",
+  "name": "Hacker News API",
   "version": "1.0.0",
-  "description": "Fetch the latest gaming news from around the web",
+  "description": "Fetch front page Hacker News stories",
   "endpoints": {...}
 }</code></pre>
                                 </div>
