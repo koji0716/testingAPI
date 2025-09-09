@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 endpointSelect.innerHTML = `
                     <option value="/api/health">Health Check</option>
                     <option value="/api/info">API Info</option>
-                    <option value="/api/gaming-news">Gaming News</option>
+                    <option value="/api/hacker-news">Hacker News</option>
                 `;
                 break;
             default:
