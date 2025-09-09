@@ -1,6 +1,6 @@
 import os
 import logging
-from datetime import datetime
+from datetime import datetime, timezone
 from flask import Flask, jsonify, render_template
 from flask_cors import CORS
 from dotenv import load_dotenv
@@ -95,7 +95,7 @@ def health_check():
     return jsonify({
         "status": "healthy",
         "message": "API is running successfully",
-        "timestamp": "2025-09-01T00:00:00Z",
+        "timestamp": datetime.now(timezone.utc).isoformat(),
     })
 
 
@@ -149,4 +149,3 @@ def debug_env():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
-

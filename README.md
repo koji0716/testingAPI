@@ -25,6 +25,14 @@ The server will start on `http://localhost:5000`.
 - **Health check:** `GET /api/health` confirms the API status.
 - **Debug environment:** `GET /api/debug-env` shows the value of the `CODEZ` environment variable.
 
+## Tests
+
+Run the test suite with:
+
+```bash
+pytest
+```
+
 ## Environment
 
 This application requires no API keys. Environment variables are loaded from the environment at runtime. For local development, values from a `.env` file are used if the variable is not already defined.
