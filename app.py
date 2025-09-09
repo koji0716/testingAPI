@@ -1,6 +1,6 @@
 import os
 import logging
-from datetime import datetime
+from datetime import datetime, timezone
 from flask import Flask, jsonify, render_template
 from flask_cors import CORS
 from dotenv import load_dotenv
@@ -19,34 +19,14 @@ app.secret_key = os.environ.get("SESSION_SECRET", "dev-secret-key")
 # Enable CORS for all routes
 CORS(app)
 
-# External news API configuration
-NEWS_API_URL = "https://newsapi.org/v2/everything"
+# Hacker News API configuration
+HN_API_URL = "https://hn.algolia.com/api/v1/search"
 
 
-def _get_news_api_key() -> str:
-    """Retrieve the News API key from environment variables"""
-    api_key = os.environ.get("NEWS_API_KEY")
-    if not api_key:
-        load_dotenv()
-        api_key = os.environ.get("NEWS_API_KEY")
-    if not api_key:
-        raise RuntimeError("NEWS_API_KEY environment variable is not set")
-    return api_key
-
-
-def _fetch_gaming_news():
-    """Fetch gaming news articles from the external API"""
-    api_key = _get_news_api_key()
-
-    params = {
-        "q": "gaming",
-        "language": "en",
-        "sortBy": "publishedAt",
-        "pageSize": 10,
-        "apiKey": api_key,
-    }
-
-    response = requests.get(NEWS_API_URL, params=params, timeout=10)
+def _fetch_hacker_news():
+    """Fetch front page Hacker News stories"""
+    params = {"tags": "front_page"}
+    response = requests.get(HN_API_URL, params=params, timeout=10)
     response.raise_for_status()
     data = response.json()
 
@@ -61,14 +41,13 @@ def _fetch_gaming_news():
 
     articles = [
         {
-            "title": a.get("title"),
-            "description": a.get("description"),
-            "url": a.get("url"),
-            "image": a.get("urlToImage"),
-            "publishedAt": format_date(a.get("publishedAt")),
-            "source": (a.get("source") or {}).get("name"),
+            "title": h.get("title") or h.get("story_title"),
+            "url": h.get("url") or h.get("story_url"),
+            "author": h.get("author"),
+            "points": h.get("points"),
+            "created_at": format_date(h.get("created_at")),
         }
-        for a in data.get("articles", [])
+        for h in data.get("hits", [])
     ]
     return articles
 
@@ -116,37 +95,33 @@ def health_check():
     return jsonify({
         "status": "healthy",
         "message": "API is running successfully",
-        "timestamp": "2025-09-01T00:00:00Z",
+        "timestamp": datetime.now(timezone.utc).isoformat(),
     })
 
 
-@app.route('/api/gaming-news', methods=['GET'])
-def gaming_news_api():
-    """Fetch the latest gaming news articles as JSON"""
+@app.route('/api/hacker-news', methods=['GET'])
+def hacker_news_api():
+    """Fetch the latest Hacker News stories as JSON"""
     try:
-        articles = _fetch_gaming_news()
+        articles = _fetch_hacker_news()
         return jsonify({"status": "success", "count": len(articles), "data": articles})
-    except RuntimeError as e:
-        return jsonify({"error": "Configuration Error", "message": str(e)}), 500
     except requests.RequestException as e:
-        logging.error(f"Error fetching gaming news: {str(e)}")
+        logging.error(f"Error fetching Hacker News: {str(e)}")
         return jsonify({
             "error": "Bad Gateway",
-            "message": "Failed to fetch gaming news",
+            "message": "Failed to fetch Hacker News",
         }), 502
 
 
-@app.route('/gaming-news', methods=['GET'])
-def gaming_news_page():
-    """Render the latest gaming news articles"""
+@app.route('/hacker-news', methods=['GET'])
+def hacker_news_page():
+    """Render the latest Hacker News stories"""
     try:
-        articles = _fetch_gaming_news()
-        return render_template('gaming_news.html', articles=articles)
-    except RuntimeError as e:
-        return render_template('error.html', message=str(e)), 500
+        articles = _fetch_hacker_news()
+        return render_template('hacker_news.html', articles=articles)
     except requests.RequestException as e:
-        logging.error(f"Error fetching gaming news: {str(e)}")
-        return render_template('error.html', message="Failed to fetch gaming news"), 502
+        logging.error(f"Error fetching Hacker News: {str(e)}")
+        return render_template('error.html', message="Failed to fetch Hacker News"), 502
 
 
 # Get API information
@@ -154,12 +129,12 @@ def gaming_news_page():
 def api_info():
     """Get API information"""
     return jsonify({
-        "name": "Gaming News API",
+        "name": "Hacker News API",
         "version": "1.0.0",
-        "description": "Fetch the latest gaming news from around the web",
+        "description": "Fetch front page Hacker News stories",
         "endpoints": {
             "health": "/api/health",
-            "gaming_news": "/api/gaming-news",
+            "hacker_news": "/api/hacker-news",
             "info": "/api/info",
         },
     })
@@ -174,4 +149,3 @@ def debug_env():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
-
