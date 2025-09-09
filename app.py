@@ -98,8 +98,6 @@ def health_check():
         "timestamp": datetime.now(timezone.utc).isoformat(),
     })
 
-
-codez
 @app.route('/api/hacker-news', methods=['GET'])
 def hacker_news_api():
     """Fetch the latest Hacker News stories as JSON"""
